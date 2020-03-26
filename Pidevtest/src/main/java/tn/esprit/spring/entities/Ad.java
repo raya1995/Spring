@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,29 +45,24 @@ public class Ad implements Serializable{
 		private KindOfGood kindofgood;
 		
 		@OneToMany
-		(mappedBy="ad", 
-				cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, 
-				fetch=FetchType.EAGER)
+		(cascade = CascadeType.ALL, mappedBy="Ads")
 		private List<Comment> comments = new ArrayList<>();
 		
-		/*@OneToMany
-		(mappedBy="ads", 
-				cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, 
-				fetch=FetchType.EAGER)
-		private List<Multimedia> multimedias = new ArrayList<>();
+		@OneToMany
+		(cascade = CascadeType.ALL, mappedBy="ad")
+		private Set<Multimedia> multimedias;
 
-		*/
 
 		public Ad() {
 			super();
-			// TODO Auto-generated constructor stub
+			
 		}
-		
-		
-		public Ad(int idAd, String description, String location, int area, Date adDate, int viewsNumber,
-				Boolean success, int score, KindOfGood kindofgood, List<Comment> comments) {
+
+
+		public Ad(String description, String location, int area, Date adDate, int viewsNumber,
+				Boolean success, int score, KindOfGood kindofgood) {
 			super();
-			IdAd = idAd;
+			
 			Description = description;
 			Location = location;
 			Area = area;
@@ -76,24 +71,8 @@ public class Ad implements Serializable{
 			Success = success;
 			Score = score;
 			this.kindofgood = kindofgood;
-			this.comments = comments;
 		}
 
-
-		/*public Ad(String description, String location, int area, Date adDate, int viewsNumber, Boolean success,
-				int score,KindOfGood kindofgood) {
-			super();
-			Description = description;
-			Location = location;
-			Area = area;
-			AdDate = adDate;
-			ViewsNumber = viewsNumber;
-			Success = success;
-			Score = score;
-			this.Kindofgood = kindofgood;
-		}*/
-
-		
 
 		public int getIdAd() {
 			return IdAd;
@@ -183,13 +162,31 @@ public class Ad implements Serializable{
 		}
 
 
+		public Set<Multimedia> getMultimedias() {
+			return multimedias;
+		}
+
+
+		public void setMultimedias(Set<Multimedia> multimedias) {
+			this.multimedias = multimedias;
+		}
+
+
+		public void addComment(Comment comment){
+			comment.setAds(this);
+			this.comments.add(comment);
+		}
+
+
 		@Override
 		public String toString() {
 			return "Ad [IdAd=" + IdAd + ", Description=" + Description + ", Location=" + Location + ", Area=" + Area
 					+ ", AdDate=" + AdDate + ", ViewsNumber=" + ViewsNumber + ", Success=" + Success + ", Score="
-					+ Score + ", kindofgood=" + kindofgood + ", comments=" + comments + "]";
+					+ Score + ", kindofgood=" + kindofgood + ", comments=" + comments + ", multimedias=" + multimedias
+					+ "]";
 		}
 
+	
 
 	
 	
